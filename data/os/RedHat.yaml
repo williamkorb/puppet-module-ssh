@@ -1,0 +1,39 @@
+---
+
+ssh::server::address_family: ~
+ssh::server::allow_agent_forwarding: ~
+ssh::server::allow_stream_local_forwarding: ~
+ssh::server::allow_tcp_forwarding: ~
+ssh::server::authorized_keys_file: '.ssh/authorized_keys'
+ssh::server::authorized_principals_file: ~
+ssh::server::banner: ~
+ssh::server::challenge_response_authentication: 'no'
+ssh::server::chroot_directory: ~
+ssh::server::client_alive_count_max: ~
+ssh::server::client_alive_interval: ~
+ssh::server::compression: ~
+ssh::server::gss_api_authentication: 'yes'
+ssh::server::gss_api_cleanup_credentials: 'no'
+ssh::server::hostbased_authentication: ~
+ssh::server::ignore_rhosts: ~
+ssh::server::ignore_user_known_hosts: ~
+ssh::server::log_level: ~
+ssh::server::login_grace_time: ~
+ssh::server::max_auth_tries: ~
+ssh::server::max_sessions: ~
+ssh::server::max_startups: ~
+ssh::server::packages: 'openssh-server'
+ssh::server::password_authentication: 'no'
+ssh::server::permit_empty_passwords: ~
+ssh::server::permit_tunnel: ~
+ssh::server::permit_user_environment: ~
+ssh::server::print_motd: ~
+ssh::server::pubkey_authentication: ~
+ssh::server::strict_modes: ~
+ssh::server::subsystem: 'sftp /usr/libexec/openssh/sftp-server'
+ssh::server::syslog_facility: 'AUTHPRIV'
+ssh::server::tcp_keep_alive: ~
+ssh::server::x11_display_offset: ~
+ssh::server::x11_forwarding: 'yes'
+ssh::server::x11_use_localhost: ~
+ssh::server::xauth_location: ~
