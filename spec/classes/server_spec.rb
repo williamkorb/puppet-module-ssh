@@ -281,6 +281,14 @@ describe 'ssh::server' do
   #
   describe 'with parameter' do
 
+    context 'syslog_facility' do
+      context "set to a valid facility" do
+        let(:params) do { :syslog_facility => 'INFO' } end
+
+        it { should contain_file('sshd_config').with_content(/^SyslogFacility INFO$/) }
+      end
+    end
+
     context 'stream_local_bind_mask' do
       context "set to a valid umask" do
         let(:params) do { :stream_local_bind_mask => '0022' } end
@@ -1263,10 +1271,14 @@ describe 'ssh::server' do
         :message => 'expects a Boolean',
       },
       'String (optional)' => {
-        :name    => %w(authorized_keys_command authorized_keys_command_user authorized_principals_command authorized_principals_command_user
-          authorized_principals_file banner banner_content challenge_response_authentication chroot_directory force_command host_certificate
-          host_key_agent ip_qos log_level max_startups permit_user_environment pid_file rdomain rekey_limit revoked_keys set_env subsystem
-          trusted_user_ca_keys version_addendum xauth_location),
+        :name    => %w(authorized_keys_command authorized_keys_command_user
+          authorized_principals_command authorized_principals_command_user
+          authorized_principals_file banner banner_content
+          challenge_response_authentication chroot_directory force_command
+          host_certificate host_key_agent ip_qos log_level max_startups
+          permit_user_environment pid_file rdomain rekey_limit revoked_keys
+          set_env subsystem trusted_user_ca_keys version_addendum xauth_location
+          custom),
         :valid   => ['string', :undef],
         :invalid => [%w(array), { 'ha' => 'sh' }, 3, 2.42, false],
         :message => 'expects a value of type Undef or String',
