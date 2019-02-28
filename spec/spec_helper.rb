@@ -15,3 +15,10 @@ RSpec.configure do |config|
     Facter.clear_messages
   end
 end
+
+RSpec.configure do |c|
+  # Coverage generation
+  c.after(:suite) do
+    RSpec::Puppet::Coverage.report!
+  end
+end
