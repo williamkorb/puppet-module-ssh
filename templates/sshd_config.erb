@@ -295,12 +295,3 @@ XAuthLocation <%= @xauth_location %>
 <% if @custom != nil -%>
 <%= @custom %>
 <% end -%>
-<% if @sshd_config_match -%>
-
-<%   @sshd_config_match.sort.each do |key, hash| -%>
-Match <%= key %>
-<%     hash.sort.each do |values| -%>
-  <%= values %>
-<%     end -%>
-<%   end -%>
-<% end -%>
