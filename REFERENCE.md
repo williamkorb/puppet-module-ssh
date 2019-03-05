@@ -10,7 +10,7 @@
 
 **Defined types**
 
-* [`ssh::config_entry`](#sshconfig_entry): == Define: ssh::config_entry  Manage an entry in ~/.ssh/config for a particular user.  Lines model the lines in each Host block.
+* [`ssh::config_entry`](#sshconfig_entry): Create config entries in a users' ~/.ssh/config
 
 ## Classes
 
@@ -485,9 +485,13 @@ Data type: `Optional[String[1]]`
 
 Default value: 'none'
 
-##### `banner_path``
+##### `banner`
 
-which is `/etc/sshd_banner`.
+Data type: `Optional[String[1]]`
+
+
+
+Default value: 'none'
 
 ##### `ca_signature_algorithms`
 
@@ -1077,22 +1081,12 @@ Data type: `Optional[String[1]]`
 
 Default value: `undef`
 
-##### `banner`
-
-Data type: `Optional[String[1]]`
-
-
-
-Default value: 'none'
-
 ## Defined types
 
 ### ssh::config_entry
 
-== Define: ssh::config_entry
-
-Manage an entry in ~/.ssh/config for a particular user.  Lines model the lines
-in each Host block.
+Manage an entry in ~/.ssh/config for a particular user. Lines model the
+lines in each Host block.
 
 #### Parameters
 
@@ -1100,39 +1094,39 @@ The following parameters are available in the `ssh::config_entry` defined type.
 
 ##### `owner`
 
-Data type: `Any`
+Data type: `String[1]`
 
 
 
 ##### `group`
 
-Data type: `Any`
+Data type: `String[1]`
 
 
 
 ##### `path`
 
-Data type: `Any`
+Data type: `Stdlib::Absolutepath`
 
 
 
 ##### `host`
 
-Data type: `Any`
+Data type: `String[1]`
 
 
 
 ##### `order`
 
-Data type: `Any`
+Data type: `Integer[0]`
 
 
 
-Default value: '10'
+Default value: 10
 
 ##### `ensure`
 
-Data type: `Any`
+Data type: `Enum['present','absent']`
 
 
 
@@ -1140,7 +1134,7 @@ Default value: 'present'
 
 ##### `lines`
 
-Data type: `Any`
+Data type: `Array[String]`
 
 
 

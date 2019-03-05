@@ -67,7 +67,7 @@
 #
 # @param authorized_principals_file
 #
-# @param banner_path` which is `/etc/sshd_banner`.
+# @param banner
 #
 # @param ca_signature_algorithms
 #
