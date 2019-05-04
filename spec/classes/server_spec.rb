@@ -283,9 +283,9 @@ describe 'ssh::server' do
 
     context 'syslog_facility' do
       context "set to a valid facility" do
-        let(:params) do { :syslog_facility => 'INFO' } end
+        let(:params) do { :syslog_facility => 'LOCAL1' } end
 
-        it { should contain_file('sshd_config').with_content(/^SyslogFacility INFO$/) }
+        it { should contain_file('sshd_config').with_content(/^SyslogFacility LOCAL1$/) }
       end
     end
 
@@ -442,10 +442,10 @@ describe 'ssh::server' do
     end
 
     context 'log_level' do
-      context "set to valid string 'test'" do
-        let(:params) do { :log_level => 'test' } end
+      context "set to valid string 'DEBUG1'" do
+        let(:params) do { :log_level => 'DEBUG1' } end
 
-        it { should contain_file('sshd_config').with_content(/^LogLevel test$/) }
+        it { should contain_file('sshd_config').with_content(/^LogLevel DEBUG1$/) }
       end
     end
 
@@ -1264,6 +1264,12 @@ describe 'ssh::server' do
         :invalid => ['invalid', %w(array), { 'ha' => 'sh' }, -1, 2.42, false, 'YES', 'No'],
         :message => 'expects an undef value or a match for Pattern|Error while evaluating a Resource Statement',
       },
+      'Ssh::Log_level (optional)' => {
+        :name    => %w(log_level),
+        :valid   => ['QUIET', 'FATAL', 'ERROR', 'INFO', 'VERBOSE', 'DEBUG', 'DEBUG1', 'DEBUG2', 'DEBUG3', :undef],
+        :invalid => ['invalid', %w(array), { 'ha' => 'sh' }, -1, 2.42, false, 'INFO1'],
+        :message => 'expects an undef value or a match for Pattern|Error while evaluating a Resource Statement',
+      },
       'Boolean' => {
         :name    => %w(manage_service service_enable service_hasrestart service_hasstatus),
         :valid   => [true, false],
@@ -1275,7 +1281,7 @@ describe 'ssh::server' do
           authorized_principals_command authorized_principals_command_user
           authorized_principals_file banner banner_content
           challenge_response_authentication chroot_directory force_command
-          host_certificate host_key_agent ip_qos log_level max_startups
+          host_certificate host_key_agent ip_qos max_startups
           permit_user_environment pid_file rdomain rekey_limit revoked_keys
           set_env subsystem trusted_user_ca_keys version_addendum xauth_location
           custom),

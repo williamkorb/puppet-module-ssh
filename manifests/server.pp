@@ -216,7 +216,7 @@
 # @param custom
 #
 class ssh::server (
-  Variant[String, Array[String[1]]] $packages = 'openssh-server',
+  Variant[String[1], Array[String[1]]] $packages = 'openssh-server',
   Optional[Stdlib::Absolutepath] $package_source = undef,
   Optional[Stdlib::Absolutepath] $package_adminfile = undef,
   Stdlib::Absolutepath $config_path = '/etc/ssh/sshd_config',
@@ -270,10 +270,17 @@ class ssh::server (
   Optional[String[1]] $authorized_principals_command_user = undef,
   Optional[String[1]] $authorized_principals_file = 'none',
   Optional[String[1]] $banner = 'none', # if set, this should be the same value of `$banner_path` which is `/etc/sshd_banner`.
-  Optional[Array[String[1]]] $ca_signature_algorithms = undef,
+  Optional[Array[String[1]]] $ca_signature_algorithms = ['ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 'ecdsa-sha2-nistp521', 'ssh-ed25519', 'rsa-sha2-512', 'rsa-sha2-256', 'ssh-rsa'],
   Optional[String[1]] $challenge_response_authentication = 'yes',
   Optional[String[1]] $chroot_directory = 'none',
-  Optional[Array[String[1]]] $ciphers = undef, # docs give a default list, though no os specifies this
+  Optional[Array[String[1]]] $ciphers = [
+    'chacha20-poly1305@openssh.com',
+    'aes128-ctr',
+    'aes192-ctr',
+    'aes256-ctr',
+    'aes128-gcm@openssh.com',
+    'aes256-gcm@openssh.com',
+  ],
   Optional[Integer[0]] $client_alive_count_max = 3, # docs read default as 0, though every os uses 3
   Optional[Integer[0]] $client_alive_interval = 0,
   Optional[Enum['yes', 'delayed', 'no']] $compression = 'yes',
@@ -309,7 +316,7 @@ class ssh::server (
   Optional[Array[String[1]]] $kex_algorithms = undef, # docs give a default list, though no os specifies this
   Optional[Array[String[1]]] $listen_address = undef,
   Optional[Integer[0]] $login_grace_time = 120,
-  Optional[String[1]] $log_level = 'INFO',
+  Optional[Ssh::Log_level] $log_level = 'INFO',
   Optional[Array[String[1]]] $macs = undef, # docs give a default list, though no os specifies this
   Optional[Integer[2]] $max_auth_tries = 6,
   Optional[Integer[0]] $max_sessions = 10,
