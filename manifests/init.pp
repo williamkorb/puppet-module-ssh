@@ -1,62 +1,134 @@
-# == Class: ssh
+# @summary Class to manage SSH client
 #
-# Manage ssh client and server
+# Notes: `Match` and `Host` attributes are not directly supported as multiple
+# match/host blocks can exist. Use the `custom` parameter for that.
+#
+#
+# TODO - perhaps not use default values for config settings at all, so the
+# defaults from ssh are used. By setting the default values, a tight coupling
+# between the current version of openssh and this module is formed. When ssh
+# updates the defaults, then these defaults will have to change which would
+# need a major version bump.
 #
 class ssh (
-  Variant[String, Array[String[1]]] $packages = ['openssh-clients'],
+  Variant[String[1], Array[String[1]]] $packages = 'openssh-clients',
+  Optional[Stdlib::Absolutepath] $package_source = undef,
+  Optional[Stdlib::Absolutepath] $package_adminfile = undef,
+  Stdlib::Absolutepath $config_path = '/etc/ssh/ssh_config',
+  String[1] $config_owner = 'root',
+  String[1] $config_group = 'root',
+  Stdlib::Filemode $config_mode = '0644',
+  Stdlib::Absolutepath $global_known_hosts = '/etc/ssh/ssh_known_hosts',
+  String[1] $global_known_hosts_owner = 'root',
+  String[1] $global_known_hosts_group = 'root',
+  Stdlib::Filemode $global_known_hosts_mode = '0644',
+  Boolean $manage_root_ssh_config = false,
+  String[1] $root_ssh_config_content = "# This file is being maintained by Puppet.\n# DO NOT EDIT\n",
+  Boolean $manage_server = true,
   Boolean $key_export = false,
   Boolean $purge_keys = true,
-  Optional[Stdlib::Absolutepath] $ssh_package_source = undef,
-  Optional[Stdlib::Absolutepath] $ssh_package_adminfile = undef,
   Enum['present', 'absent'] $ssh_key_ensure = 'present',
-  Boolean $ssh_key_import = true,
+  Boolean $ssh_key_import = false,
   Ssh::Key::Type $ssh_key_type = 'ssh-rsa',
-  $ssh_config_hash_known_hosts = 'USE_DEFAULTS',
-  $config_entries = {},
   $keys = undef,
-  Stdlib::Absolutepath $ssh_config_path = '/etc/ssh/ssh_config',
-  String[1] $ssh_config_owner = 'root',
-  String[1] $ssh_config_group = 'root',
-  Stdlib::Filemode $ssh_config_mode = '0644',
-  $ssh_config_global_known_hosts_file = '/etc/ssh/ssh_known_hosts',
-  $ssh_config_global_known_hosts_list = undef,
-  $ssh_config_global_known_hosts_owner = 'root',
-  $ssh_config_global_known_hosts_group = 'root',
-  $ssh_config_global_known_hosts_mode = '0644',
-  $manage_root_ssh_config = false,
-  $root_ssh_config_content = "# This file is being maintained by Puppet.\n# DO NOT EDIT\n",
+  Hash $config_entries = {},
+  # class parameters below this line directly correlate with ssh_config parameters
+  String[1] $host = '*',
+  Optional[Enum['yes', 'no', 'ask', 'confirm']] $add_keys_to_agent = undef,
+  Optional[Enum['any', 'inet', 'inet6']] $address_family = undef,
+  Optional[Ssh::Yes_no] $batch_mode = undef,
+  Optional[String[1]] $bind_address = undef,
+  Optional[String[1]] $bind_interface = undef,
+  Optional[Array[String[1]]] $canonical_domains = undef,
+  Optional[Ssh::Yes_no] $canonicalize_fallback_local = undef,
+  Optional[Enum['yes', 'no', 'always']] $canonicalize_hostname = undef,
+  Optional[Integer[0]] $canonicalize_max_dots = undef,
+  Optional[Array[String[1]]] $canonicalize_permitted_cnames = undef,
+  Optional[Array[String[1]]] $ca_signature_algorithms = undef,
+  Optional[Array[String[1]]] $certificate_file = undef,
+  Optional[Ssh::Yes_no] $challenge_response_authentication = undef,
+  Optional[Ssh::Yes_no] $check_host_ip = undef,
+  Optional[Array[String[1]]] $ciphers = undef,
+  Optional[Ssh::Yes_no] $clear_all_forwardings = undef,
+  Optional[Ssh::Yes_no] $compression = undef,
+  Optional[Integer[0]] $connection_attempts = undef,
+  Optional[Integer[0]] $connect_timeout = undef,
+  Optional[Enum['yes', 'no', 'ask', 'auto', 'autoask']] $control_master = undef,
+  Optional[String[1]] $control_path = undef,
+  Optional[String[1]] $control_persist = undef,
+  Optional[String[1]] $dynamic_forward = undef,
+  Optional[Ssh::Yes_no] $enable_ssh_keysign = undef,
+  Optional[String[1]] $escape_char = undef,
+  Optional[Ssh::Yes_no] $exit_on_forward_failure = undef,
+  Optional[Enum['sha256', 'md5']] $fingerprint_hash = undef,
+  Optional[Ssh::Yes_no] $forward_agent = undef,
+  Optional[Ssh::Yes_no] $forward_x11 = undef,
+  Variant[Undef, String[1], Integer[0]] $forward_x11_timeout = undef,
+  Optional[Ssh::Yes_no] $forward_x11_trusted = undef,
+  Optional[Ssh::Yes_no] $gateway_ports = undef,
+  Variant[Undef, String[1], Array[String[1]]] $global_known_hosts_file = undef,
+  Optional[Ssh::Yes_no] $gss_api_authentication = undef,
+  Optional[Ssh::Yes_no] $gss_api_delegate_credentials = undef,
+  Optional[Ssh::Yes_no] $hash_known_hosts = undef,
+  Optional[Ssh::Yes_no] $hostbased_authentication = undef,
+  Optional[Array[String[1]]] $hostbased_key_types = undef,
+  Optional[Array[String[1]]] $host_key_algorithms = undef,
+  Optional[String[1]] $host_key_alias = undef,
+  Optional[String[1]] $host_name = undef,
+  Optional[Ssh::Yes_no] $identities_only = undef,
+  Optional[String[1]] $identity_agent = undef,
+  Optional[Array[String[1]]] $identity_file = undef,
+  Optional[Array[String[1]]] $ignore_unknown = undef,
+  Optional[String[1]] $include = undef,
+  Optional[String[1]] $ip_qos = undef,
+  Optional[Ssh::Yes_no] $kbd_interactive_authentication = undef,
+  Optional[Array[String[1]]] $kbd_interactive_devices = undef,
+  Optional[Array[String[1]]] $kex_algorithms = undef,
+  Optional[String[1]] $local_command = undef,
+  Optional[String[1]] $local_forward = undef,
+  Optional[Ssh::Log_level] $log_level = undef,
+  Optional[Ssh::Yes_no] $no_host_authentication_for_localhost = undef,
+  Optional[Integer] $number_of_password_prompts = undef,
+  Optional[Ssh::Yes_no] $password_authentication = undef,
+  Optional[Ssh::Yes_no] $permit_local_command = undef,
+  Optional[String[1]] $pkcs11_provider = undef,
+  Optional[Stdlib::Port] $port = undef,
+  Optional[Array[String[1]]] $preferred_authentications = undef,
+  Optional[String[1]] $proxy_command = undef,
+  Optional[Array[String[1]]] $proxy_jump = undef,
+  Optional[Ssh::Yes_no] $proxy_use_fdpass = undef,
+  Optional[Array[String[1]]] $pubkey_accepted_key_types = undef,
+  Optional[Ssh::Yes_no] $pubkey_authentication = undef,
+  Optional[String[1]] $rekey_limit = undef,
+  Optional[String[1]] $remote_command = undef,
+  Optional[String[1]] $remote_forward = undef,
+  Optional[Enum['no', 'yes', 'force', 'auto']] $request_tty = undef,
+  Optional[String[1]] $revoked_host_keys = undef,
+  Optional[Array[String[1]]] $send_env = undef,
+  Variant[Undef, String[1], Integer[0]] $server_alive_count_max = undef,
+  Variant[Undef, String[1], Integer[0]] $server_alive_interval = undef,
+  Optional[Array[String[1]]] $set_env = undef,
+  Optional[Pattern[/^[0-7]{4}$/]] $stream_local_bind_mask = undef,
+  Optional[Ssh::Yes_no] $stream_local_bind_unlink = undef,
+  Optional[Enum['yes', 'no', 'accept-new', 'off', 'ask']] $strict_host_key_checking = undef,
+  Optional[Ssh::Syslog_facility] $syslog_facility = undef,
+  Optional[Ssh::Yes_no] $tcp_keep_alive = undef,
+  Optional[Enum['yes', 'no', 'point-to-point', 'ethernet']] $tunnel = undef,
+  Optional[String[1]] $tunnel_device = undef,
+  Optional[Enum['yes', 'no', 'ask']] $update_host_keys = undef,
+  Optional[String[1]] $user = undef,
+  Optional[Array[String[1]]] $user_known_hosts_file = undef,
+  Optional[Enum['yes', 'no', 'ask']] $verify_host_key_dns = undef,
+  Optional[Ssh::Yes_no] $visual_host_key = undef,
+  Optional[String[1]] $xauth_location = undef,
+  # custom is a string that allows for multiple lines to be appended to end of
+  # the sshd_config file.
+  Optional[String[1]] $custom = undef,
 ) {
 
+  # TODO: This huge case statement is getting transitioned to hiera
   case $facts['os']['family'] {
-    'RedHat': {
-      $default_packages                        = ['openssh-server',
-                                                  'openssh-clients']
-      $default_service_name                    = 'sshd'
-      $default_ssh_config_hash_known_hosts     = 'no'
-      $default_ssh_config_forward_x11_trusted  = 'yes'
-      $default_ssh_package_source              = undef
-      $default_ssh_package_adminfile           = undef
-      $default_ssh_sendenv                     = true
-      $default_sshd_config_subsystem_sftp      = '/usr/libexec/openssh/sftp-server'
-      $default_sshd_config_mode                = '0600'
-      $default_sshd_config_use_dns             = 'yes'
-      $default_sshd_config_xauth_location      = '/usr/bin/xauth'
-      $default_sshd_use_pam                    = 'yes'
-      $default_sshd_gssapikeyexchange          = undef
-      $default_sshd_pamauthenticationviakbdint = undef
-      $default_sshd_gssapicleanupcredentials   = 'yes'
-      $default_sshd_acceptenv                  = true
-      $default_service_hasstatus               = true
-      if versioncmp($::operatingsystemrelease, '7.4') < 0 {
-        $default_sshd_config_serverkeybits = '1024'
-      } else {
-        $default_sshd_config_serverkeybits = undef
-      }
-      $default_sshd_config_hostkey             = [ '/etc/ssh/ssh_host_rsa_key' ]
-      $default_sshd_addressfamily              = 'any'
-      $default_sshd_config_tcp_keepalive       = 'yes'
-      $default_sshd_config_permittunnel        = 'no'
-    }
+    'RedHat': {}
     'Suse': {
       $default_packages                        = 'openssh'
       $default_service_name                    = 'sshd'
@@ -289,7 +361,7 @@ class ssh (
       }
     }
     default: {
-      fail("ssh supports osfamilies RedHat, Suse, Debian and Solaris. Detected osfamily is <${::osfamily}>.")
+      fail("ssh supports osfamilies RedHat, Suse, Debian and Solaris. Detected os family is <${facts['os']['family']}>.")
     }
   }
 
@@ -316,11 +388,11 @@ class ssh (
 
   file  { 'ssh_config' :
     ensure  => file,
-    path    => $ssh_config_path,
-    owner   => $ssh_config_owner,
-    group   => $ssh_config_group,
-    mode    => $ssh_config_mode,
-    content => template($ssh_config_template),
+    path    => $config_path,
+    owner   => $config_owner,
+    group   => $config_group,
+    mode    => $config_mode,
+    content => template('ssh/ssh_config.erb'),
     require => Package[$packages],
   }
 
@@ -351,25 +423,6 @@ class ssh (
     }
   }
 
-  if $manage_service_real {
-    service { 'sshd_service' :
-      ensure     => $service_ensure,
-      name       => $service_name_real,
-      enable     => $service_enable_real,
-      hasrestart => $service_hasrestart_real,
-      hasstatus  => $service_hasstatus_real,
-      subscribe  => File['sshd_config'],
-    }
-  }
-
-  if $manage_firewall == true {
-    firewall { '22 open port 22 for SSH':
-      action => 'accept',
-      dport  => 22,
-      proto  => 'tcp',
-    }
-  }
-
   # If either IPv4 or IPv6 stack is not configured on the agent, the
   # corresponding $::ipaddress(6)? fact is not present. So, we cannot assume
   # these variables are defined. Getvar (Stdlib 4.13+, ruby 1.8.7+) handles
@@ -382,7 +435,8 @@ class ssh (
   if $key_export == true {
     # ssh_key_type might start with 'ssh-' though facter stores them without
     # the 'ssh-' prefix.
-    $key_type = delete_regex($key_type, '^ssh-')
+    #$key_type = delete_regex($ssh_key_type, '^ssh-')
+    $key_type = 'rsa'
     @@sshkey { $::fqdn :
       ensure       => $ssh_key_ensure,
       host_aliases => $host_aliases,
@@ -393,17 +447,17 @@ class ssh (
 
   file { 'ssh_known_hosts':
     ensure  => file,
-    path    => $ssh_config_global_known_hosts_file,
-    owner   => $ssh_config_global_known_hosts_owner,
-    group   => $ssh_config_global_known_hosts_group,
-    mode    => $ssh_config_global_known_hosts_mode,
+    path    => $global_known_hosts,
+    owner   => $global_known_hosts_owner,
+    group   => $global_known_hosts_group,
+    mode    => $global_known_hosts_mode,
     require => Package[$packages],
   }
 
   # import all nodes' ssh keys
   if $ssh_key_import == true {
     Sshkey <<||>> {
-      target => $ssh_config_global_known_hosts_file,
+      target => $global_known_hosts,
     }
   }
 
@@ -413,17 +467,22 @@ class ssh (
   }
 
   # manage users' ssh config entries if present
-  create_resources('ssh::config_entry',$config_entries)
+  $config_entries.each |$key,$value| {
+    ssh::config_entry { $key:
+      * => $value,
+    }
+  }
 
   # manage users' ssh authorized keys if present
   if $keys != undef {
-    if $hiera_merge == true {
-      $keys = hiera_hash('ssh::keys')
-    } else {
-      $keys = $keys
-      notice('Future versions of the ssh module will default ssh::hiera_merge to true')
+    $keys.each |$key,$value| {
+      ssh_authorized_key { $key:
+        * => $value,
+      }
     }
-    validate_hash($keys)
-    create_resources('ssh_authorized_key', $keys)
+  }
+
+  if $manage_server == true {
+    include ssh::server
   }
 }

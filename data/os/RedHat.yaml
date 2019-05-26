@@ -1,5 +1,26 @@
 ---
 
+ssh::forward_x11_trusted: 'yes'
+ssh::gss_api_authentication: 'yes'
+
+ssh::send_env:
+  - 'LANG'
+  - 'LANGUAGE'
+  - 'LC_ADDRESS'
+  - 'LC_ALL'
+  - 'LC_COLLATE'
+  - 'LC_CTYPE'
+  - 'LC_IDENTIFICATION'
+  - 'LC_MEASUREMENT'
+  - 'LC_MESSAGES'
+  - 'LC_MONETARY'
+  - 'LC_NAME'
+  - 'LC_NUMERIC'
+  - 'LC_PAPER'
+  - 'LC_TELEPHONE'
+  - 'LC_TIME'
+  - 'XMODIFIERS'
+
 ssh::server::address_family: ~
 ssh::server::allow_agent_forwarding: ~
 ssh::server::allow_stream_local_forwarding: ~
@@ -7,8 +28,27 @@ ssh::server::allow_tcp_forwarding: ~
 ssh::server::authorized_keys_file: '.ssh/authorized_keys'
 ssh::server::authorized_principals_file: ~
 ssh::server::banner: ~
+ssh::server::ca_signature_algorithms: ~
 ssh::server::challenge_response_authentication: 'no'
 ssh::server::chroot_directory: ~
+ssh::server::ciphers:
+  - '3des-cbc'
+  - 'blowfish-cbc'
+  - 'cast128-cbc'
+  - 'arcfour'
+  - 'arcfour128'
+  - 'arcfour256'
+  - 'aes128-cbc'
+  - 'aes192-cbc'
+  - 'aes256-cbc'
+  - 'rijndael-cbc@lysator.liu.se'
+  - 'aes128-ctr'
+  - 'aes192-ctr'
+  - 'aes256-ctr'
+  - 'aes128-gcm@openssh.com'
+  - 'aes256-gcm@openssh.com'
+  - 'chacha20-poly1305@openssh.com'
+
 ssh::server::client_alive_count_max: ~
 ssh::server::client_alive_interval: ~
 ssh::server::compression: ~
