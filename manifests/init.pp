@@ -3,12 +3,225 @@
 # Notes: `Match` and `Host` attributes are not directly supported as multiple
 # match/host blocks can exist. Use the `custom` parameter for that.
 #
+# @param packages
 #
-# TODO - perhaps not use default values for config settings at all, so the
-# defaults from ssh are used. By setting the default values, a tight coupling
-# between the current version of openssh and this module is formed. When ssh
-# updates the defaults, then these defaults will have to change which would
-# need a major version bump.
+# @param package_source
+#
+# @param package_adminfile
+#
+# @param config_path
+#
+# @param config_owner
+#
+# @param config_group
+#
+# @param config_mode
+#
+# @param global_known_hosts
+#
+# @param global_known_hosts_owner
+#
+# @param global_known_hosts_group
+#
+# @param global_known_hosts_mode
+#
+# @param manage_root_ssh_config
+#
+# @param root_ssh_config_content
+#
+# @param manage_server
+#
+# @param key_export
+#
+# @param purge_keys
+#
+# @param ssh_key_ensure
+#
+# @param ssh_key_import
+#
+# @param ssh_key_type
+#
+# @param keys
+#
+# @param config_entries
+#
+# @param host
+#
+# @param add_keys_to_agent
+#
+# @param address_family
+#
+# @param batch_mode
+#
+# @param bind_address
+#
+# @param bind_interface
+#
+# @param canonical_domains
+#
+# @param canonicalize_fallback_local
+#
+# @param canonicalize_hostname
+#
+# @param canonicalize_max_dots
+#
+# @param canonicalize_permitted_cnames
+#
+# @param ca_signature_algorithms
+#
+# @param certificate_file
+#
+# @param challenge_response_authentication
+#
+# @param check_host_ip
+#
+# @param ciphers
+#
+# @param clear_all_forwardings
+#
+# @param compression
+#
+# @param connection_attempts
+#
+# @param connect_timeout
+#
+# @param control_master
+#
+# @param control_path
+#
+# @param control_persist
+#
+# @param dynamic_forward
+#
+# @param enable_ssh_keysign
+#
+# @param escape_char
+#
+# @param exit_on_forward_failure
+#
+# @param fingerprint_hash
+#
+# @param forward_agent
+#
+# @param forward_x11
+#
+# @param forward_x11_timeout
+#
+# @param forward_x11_trusted
+#
+# @param gateway_ports
+#
+# @param global_known_hosts_file
+#
+# @param gss_api_authentication
+#
+# @param gss_api_delegate_credentials
+#
+# @param hash_known_hosts
+#
+# @param hostbased_authentication
+#
+# @param hostbased_key_types
+#
+# @param host_key_algorithms
+#
+# @param host_key_alias
+#
+# @param host_name
+#
+# @param identities_only
+#
+# @param identity_agent
+#
+# @param identity_file
+#
+# @param ignore_unknown
+#
+# @param include
+#
+# @param ip_qos
+#
+# @param kbd_interactive_authentication
+#
+# @param kbd_interactive_devices
+#
+# @param kex_algorithms
+#
+# @param local_command
+#
+# @param local_forward
+#
+# @param log_level
+#
+# @param no_host_authentication_for_localhost
+#
+# @param number_of_password_prompts
+#
+# @param password_authentication
+#
+# @param permit_local_command
+#
+# @param pkcs11_provider
+#
+# @param port
+#
+# @param preferred_authentications
+#
+# @param proxy_command
+#
+# @param proxy_jump
+#
+# @param proxy_use_fdpass
+#
+# @param pubkey_accepted_key_types
+#
+# @param pubkey_authentication
+#
+# @param rekey_limit
+#
+# @param remote_command
+#
+# @param remote_forward
+#
+# @param request_tty
+#
+# @param revoked_host_keys
+#
+# @param send_env
+#
+# @param server_alive_count_max
+#
+# @param server_alive_interval
+#
+# @param set_env
+#
+# @param stream_local_bind_mask
+#
+# @param stream_local_bind_unlink
+#
+# @param strict_host_key_checking
+#
+# @param syslog_facility
+#
+# @param tcp_keep_alive
+#
+# @param tunnel
+#
+# @param tunnel_device
+#
+# @param update_host_keys
+#
+# @param user
+#
+# @param user_known_hosts_file
+#
+# @param verify_host_key_dns
+#
+# @param visual_host_key
+#
+# @param xauth_location
+#
+# @param custom
 #
 class ssh (
   Variant[String[1], Array[String[1]]] $packages = 'openssh-clients',
@@ -30,7 +243,7 @@ class ssh (
   Enum['present', 'absent'] $ssh_key_ensure = 'present',
   Boolean $ssh_key_import = false,
   Ssh::Key::Type $ssh_key_type = 'ssh-rsa',
-  $keys = undef,
+  Hash $keys = undef,
   Hash $config_entries = {},
   # class parameters below this line directly correlate with ssh_config parameters
   String[1] $host = '*',

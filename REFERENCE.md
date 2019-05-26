@@ -5,7 +5,7 @@
 
 **Classes**
 
-* [`ssh`](#ssh): == Class: ssh  Manage ssh client and server
+* [`ssh`](#ssh): Class to manage SSH client
 * [`ssh::server`](#sshserver): Class to manage SSH server
 
 **Defined types**
@@ -16,9 +16,8 @@
 
 ### ssh
 
-== Class: ssh
-
-Manage ssh client and server
+Notes: `Match` and `Host` attributes are not directly supported as multiple
+match/host blocks can exist. Use the `custom` parameter for that.
 
 #### Parameters
 
@@ -26,11 +25,115 @@ The following parameters are available in the `ssh` class.
 
 ##### `packages`
 
-Data type: `Variant[String, Array[String[1]]]`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 
 
-Default value: ['openssh-clients']
+Default value: 'openssh-clients'
+
+##### `package_source`
+
+Data type: `Optional[Stdlib::Absolutepath]`
+
+
+
+Default value: `undef`
+
+##### `package_adminfile`
+
+Data type: `Optional[Stdlib::Absolutepath]`
+
+
+
+Default value: `undef`
+
+##### `config_path`
+
+Data type: `Stdlib::Absolutepath`
+
+
+
+Default value: '/etc/ssh/ssh_config'
+
+##### `config_owner`
+
+Data type: `String[1]`
+
+
+
+Default value: 'root'
+
+##### `config_group`
+
+Data type: `String[1]`
+
+
+
+Default value: 'root'
+
+##### `config_mode`
+
+Data type: `Stdlib::Filemode`
+
+
+
+Default value: '0644'
+
+##### `global_known_hosts`
+
+Data type: `Stdlib::Absolutepath`
+
+
+
+Default value: '/etc/ssh/ssh_known_hosts'
+
+##### `global_known_hosts_owner`
+
+Data type: `String[1]`
+
+
+
+Default value: 'root'
+
+##### `global_known_hosts_group`
+
+Data type: `String[1]`
+
+
+
+Default value: 'root'
+
+##### `global_known_hosts_mode`
+
+Data type: `Stdlib::Filemode`
+
+
+
+Default value: '0644'
+
+##### `manage_root_ssh_config`
+
+Data type: `Boolean`
+
+
+
+Default value: `false`
+
+##### `root_ssh_config_content`
+
+Data type: `String[1]`
+
+
+
+Default value: "# This file is being maintained by Puppet.\n# DO NOT EDIT\n"
+
+##### `manage_server`
+
+Data type: `Boolean`
+
+
+
+Default value: `true`
 
 ##### `key_export`
 
@@ -48,22 +151,6 @@ Data type: `Boolean`
 
 Default value: `true`
 
-##### `ssh_package_source`
-
-Data type: `Optional[Stdlib::Absolutepath]`
-
-
-
-Default value: `undef`
-
-##### `ssh_package_adminfile`
-
-Data type: `Optional[Stdlib::Absolutepath]`
-
-
-
-Default value: `undef`
-
 ##### `ssh_key_ensure`
 
 Data type: `Enum['present', 'absent']`
@@ -78,7 +165,7 @@ Data type: `Boolean`
 
 
 
-Default value: `true`
+Default value: `false`
 
 ##### `ssh_key_type`
 
@@ -88,117 +175,733 @@ Data type: `Ssh::Key::Type`
 
 Default value: 'ssh-rsa'
 
-##### `ssh_config_hash_known_hosts`
+##### `keys`
 
-Data type: `Any`
+Data type: `Hash`
 
 
 
-Default value: 'USE_DEFAULTS'
+Default value: `undef`
 
 ##### `config_entries`
 
-Data type: `Any`
+Data type: `Hash`
 
 
 
 Default value: {}
 
-##### `keys`
-
-Data type: `Any`
-
-
-
-Default value: `undef`
-
-##### `ssh_config_path`
-
-Data type: `Stdlib::Absolutepath`
-
-
-
-Default value: '/etc/ssh/ssh_config'
-
-##### `ssh_config_owner`
+##### `host`
 
 Data type: `String[1]`
 
 
 
-Default value: 'root'
+Default value: '*'
 
-##### `ssh_config_group`
+##### `add_keys_to_agent`
 
-Data type: `String[1]`
-
-
-
-Default value: 'root'
-
-##### `ssh_config_mode`
-
-Data type: `Stdlib::Filemode`
-
-
-
-Default value: '0644'
-
-##### `ssh_config_global_known_hosts_file`
-
-Data type: `Any`
-
-
-
-Default value: '/etc/ssh/ssh_known_hosts'
-
-##### `ssh_config_global_known_hosts_list`
-
-Data type: `Any`
+Data type: `Optional[Enum['yes', 'no', 'ask', 'confirm']]`
 
 
 
 Default value: `undef`
 
-##### `ssh_config_global_known_hosts_owner`
+##### `address_family`
 
-Data type: `Any`
-
-
-
-Default value: 'root'
-
-##### `ssh_config_global_known_hosts_group`
-
-Data type: `Any`
+Data type: `Optional[Enum['any', 'inet', 'inet6']]`
 
 
 
-Default value: 'root'
+Default value: `undef`
 
-##### `ssh_config_global_known_hosts_mode`
+##### `batch_mode`
 
-Data type: `Any`
-
-
-
-Default value: '0644'
-
-##### `manage_root_ssh_config`
-
-Data type: `Any`
+Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: `false`
+Default value: `undef`
 
-##### `root_ssh_config_content`
+##### `bind_address`
 
-Data type: `Any`
+Data type: `Optional[String[1]]`
 
 
 
-Default value: "# This file is being maintained by Puppet.\n# DO NOT EDIT\n"
+Default value: `undef`
+
+##### `bind_interface`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `canonical_domains`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `canonicalize_fallback_local`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `canonicalize_hostname`
+
+Data type: `Optional[Enum['yes', 'no', 'always']]`
+
+
+
+Default value: `undef`
+
+##### `canonicalize_max_dots`
+
+Data type: `Optional[Integer[0]]`
+
+
+
+Default value: `undef`
+
+##### `canonicalize_permitted_cnames`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `ca_signature_algorithms`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `certificate_file`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `challenge_response_authentication`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `check_host_ip`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `ciphers`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `clear_all_forwardings`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `compression`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `connection_attempts`
+
+Data type: `Optional[Integer[0]]`
+
+
+
+Default value: `undef`
+
+##### `connect_timeout`
+
+Data type: `Optional[Integer[0]]`
+
+
+
+Default value: `undef`
+
+##### `control_master`
+
+Data type: `Optional[Enum['yes', 'no', 'ask', 'auto', 'autoask']]`
+
+
+
+Default value: `undef`
+
+##### `control_path`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `control_persist`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `dynamic_forward`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `enable_ssh_keysign`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `escape_char`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `exit_on_forward_failure`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `fingerprint_hash`
+
+Data type: `Optional[Enum['sha256', 'md5']]`
+
+
+
+Default value: `undef`
+
+##### `forward_agent`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `forward_x11`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `forward_x11_timeout`
+
+Data type: `Variant[Undef, String[1], Integer[0]]`
+
+
+
+Default value: `undef`
+
+##### `forward_x11_trusted`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `gateway_ports`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `global_known_hosts_file`
+
+Data type: `Variant[Undef, String[1], Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `gss_api_authentication`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `gss_api_delegate_credentials`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `hash_known_hosts`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `hostbased_authentication`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `hostbased_key_types`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `host_key_algorithms`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `host_key_alias`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `host_name`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `identities_only`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `identity_agent`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `identity_file`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `ignore_unknown`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `include`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `ip_qos`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `kbd_interactive_authentication`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `kbd_interactive_devices`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `kex_algorithms`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `local_command`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `local_forward`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `log_level`
+
+Data type: `Optional[Ssh::Log_level]`
+
+
+
+Default value: `undef`
+
+##### `no_host_authentication_for_localhost`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `number_of_password_prompts`
+
+Data type: `Optional[Integer]`
+
+
+
+Default value: `undef`
+
+##### `password_authentication`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `permit_local_command`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `pkcs11_provider`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `port`
+
+Data type: `Optional[Stdlib::Port]`
+
+
+
+Default value: `undef`
+
+##### `preferred_authentications`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `proxy_command`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `proxy_jump`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `proxy_use_fdpass`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `pubkey_accepted_key_types`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `pubkey_authentication`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `rekey_limit`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `remote_command`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `remote_forward`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `request_tty`
+
+Data type: `Optional[Enum['no', 'yes', 'force', 'auto']]`
+
+
+
+Default value: `undef`
+
+##### `revoked_host_keys`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `send_env`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `server_alive_count_max`
+
+Data type: `Variant[Undef, String[1], Integer[0]]`
+
+
+
+Default value: `undef`
+
+##### `server_alive_interval`
+
+Data type: `Variant[Undef, String[1], Integer[0]]`
+
+
+
+Default value: `undef`
+
+##### `set_env`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `stream_local_bind_mask`
+
+Data type: `Optional[Pattern[/^[0-7]{4}$/]]`
+
+
+
+Default value: `undef`
+
+##### `stream_local_bind_unlink`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `strict_host_key_checking`
+
+Data type: `Optional[Enum['yes', 'no', 'accept-new', 'off', 'ask']]`
+
+
+
+Default value: `undef`
+
+##### `syslog_facility`
+
+Data type: `Optional[Ssh::Syslog_facility]`
+
+
+
+Default value: `undef`
+
+##### `tcp_keep_alive`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `tunnel`
+
+Data type: `Optional[Enum['yes', 'no', 'point-to-point', 'ethernet']]`
+
+
+
+Default value: `undef`
+
+##### `tunnel_device`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `update_host_keys`
+
+Data type: `Optional[Enum['yes', 'no', 'ask']]`
+
+
+
+Default value: `undef`
+
+##### `user`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `user_known_hosts_file`
+
+Data type: `Optional[Array[String[1]]]`
+
+
+
+Default value: `undef`
+
+##### `verify_host_key_dns`
+
+Data type: `Optional[Enum['yes', 'no', 'ask']]`
+
+
+
+Default value: `undef`
+
+##### `visual_host_key`
+
+Data type: `Optional[Ssh::Yes_no]`
+
+
+
+Default value: `undef`
+
+##### `xauth_location`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### `custom`
+
+Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
 
 ### ssh::server
 
@@ -211,7 +914,7 @@ The following parameters are available in the `ssh::server` class.
 
 ##### `packages`
 
-Data type: `Variant[String, Array[String[1]]]`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 
 
@@ -359,24 +1062,7 @@ Data type: `Optional[Array[String[1]]]`
 
 
 
-Default value: [
-    'LANG',
-    'LC_CTYPE',
-    'LC_NUMERIC',
-    'LC_TIME',
-    'LC_COLLATE',
-    'LC_MONETARY',
-    'LC_MESSAGES',
-    'LC_PAPER',
-    'LC_NAME',
-    'LC_ADDRESS',
-    'LC_TELEPHONE',
-    'LC_MEASUREMENT',
-    'LC_IDENTIFICATION',
-    'LC_ALL',
-    'LANGUAGE',
-    'XMODIFIERS',
-  ]
+Default value: `undef`
 
 ##### `address_family`
 
@@ -384,7 +1070,7 @@ Data type: `Optional[Enum['any', 'inet', 'inet6']]`
 
 
 
-Default value: 'any'
+Default value: `undef`
 
 ##### `allow_agent_forwarding`
 
@@ -392,7 +1078,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `allow_groups`
 
@@ -408,7 +1094,7 @@ Data type: `Optional[Enum['yes', 'all', 'no', 'local', 'remote']]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `allow_tcp_forwarding`
 
@@ -416,7 +1102,7 @@ Data type: `Optional[Enum['yes', 'no', 'local', 'remote']]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `allow_users`
 
@@ -456,10 +1142,7 @@ Data type: `Variant[Undef, String[1], Array[String[1]]]`
 
 
 
-Default value: [
-    '.ssh/authorized_keys',
-    '.ssh/authorized_keys2',
-  ]
+Default value: `undef`
 
 ##### `authorized_principals_command`
 
@@ -483,7 +1166,7 @@ Data type: `Optional[String[1]]`
 
 
 
-Default value: 'none'
+Default value: `undef`
 
 ##### `banner`
 
@@ -491,7 +1174,7 @@ Data type: `Optional[String[1]]`
 
 
 
-Default value: 'none'
+Default value: `undef`
 
 ##### `ca_signature_algorithms`
 
@@ -507,7 +1190,7 @@ Data type: `Optional[String[1]]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `chroot_directory`
 
@@ -515,7 +1198,7 @@ Data type: `Optional[String[1]]`
 
 
 
-Default value: 'none'
+Default value: `undef`
 
 ##### `ciphers`
 
@@ -531,7 +1214,7 @@ Data type: `Optional[Integer[0]]`
 
 
 
-Default value: 3
+Default value: `undef`
 
 ##### `client_alive_interval`
 
@@ -539,7 +1222,7 @@ Data type: `Optional[Integer[0]]`
 
 
 
-Default value: 0
+Default value: `undef`
 
 ##### `compression`
 
@@ -547,7 +1230,7 @@ Data type: `Optional[Enum['yes', 'delayed', 'no']]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `deny_groups`
 
@@ -611,7 +1294,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'no'
+Default value: `undef`
 
 ##### `gss_api_cleanup_credentials`
 
@@ -619,7 +1302,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `gss_api_strict_acceptor_check`
 
@@ -643,7 +1326,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'no'
+Default value: `undef`
 
 ##### `hostbased_uses_name_from_packet_only`
 
@@ -667,11 +1350,7 @@ Data type: `Optional[Array[String[1]]]`
 
 
 
-Default value: [
-    '/etc/ssh/ssh_host_ecdsa_key',
-    '/etc/ssh/ssh_host_ed25519_key',
-    '/etc/ssh/ssh_host_rsa_key',
-  ]
+Default value: `undef`
 
 ##### `host_key_agent`
 
@@ -695,7 +1374,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `ignore_user_known_hosts`
 
@@ -703,7 +1382,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'no'
+Default value: `undef`
 
 ##### `ip_qos`
 
@@ -775,15 +1454,15 @@ Data type: `Optional[Integer[0]]`
 
 
 
-Default value: 120
+Default value: `undef`
 
 ##### `log_level`
 
-Data type: `Optional[String[1]]`
+Data type: `Optional[Ssh::Log_level]`
 
 
 
-Default value: 'INFO'
+Default value: `undef`
 
 ##### `macs`
 
@@ -799,7 +1478,7 @@ Data type: `Optional[Integer[2]]`
 
 
 
-Default value: 6
+Default value: `undef`
 
 ##### `max_sessions`
 
@@ -807,7 +1486,7 @@ Data type: `Optional[Integer[0]]`
 
 
 
-Default value: 10
+Default value: `undef`
 
 ##### `max_startups`
 
@@ -815,7 +1494,7 @@ Data type: `Optional[String[1]]`
 
 
 
-Default value: '10:30:100'
+Default value: `undef`
 
 ##### `password_authentication`
 
@@ -823,7 +1502,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `permit_empty_passwords`
 
@@ -831,7 +1510,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'no'
+Default value: `undef`
 
 ##### `permit_listen`
 
@@ -847,7 +1526,7 @@ Data type: `Optional[Ssh::Permit_root_login]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `permit_tty`
 
@@ -863,7 +1542,7 @@ Data type: `Optional[Enum['yes', 'point-to-point', 'ethernet', 'no']]`
 
 
 
-Default value: 'no'
+Default value: `undef`
 
 ##### `permit_user_environment`
 
@@ -871,7 +1550,7 @@ Data type: `Optional[String[1]]`
 
 
 
-Default value: 'no'
+Default value: `undef`
 
 ##### `permit_user_rc`
 
@@ -891,11 +1570,11 @@ Default value: `undef`
 
 ##### `port`
 
-Data type: `Stdlib::Port`
+Data type: `Optional[Stdlib::Port]`
 
 
 
-Default value: 22
+Default value: `undef`
 
 ##### `print_last_log`
 
@@ -911,7 +1590,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `pubkey_accepted_key_types`
 
@@ -927,7 +1606,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `rekey_limit`
 
@@ -983,7 +1662,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `subsystem`
 
@@ -999,7 +1678,7 @@ Data type: `Optional[Ssh::Syslog_facility]`
 
 
 
-Default value: 'AUTH'
+Default value: `undef`
 
 ##### `tcp_keep_alive`
 
@@ -1007,7 +1686,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `trusted_user_ca_keys`
 
@@ -1023,7 +1702,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'no'
+Default value: `undef`
 
 ##### `use_pam`
 
@@ -1031,7 +1710,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `version_addendum`
 
@@ -1047,7 +1726,7 @@ Data type: `Optional[Integer[0]]`
 
 
 
-Default value: 10
+Default value: `undef`
 
 ##### `x11_forwarding`
 
@@ -1055,7 +1734,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'no'
+Default value: `undef`
 
 ##### `x11_use_localhost`
 
@@ -1063,7 +1742,7 @@ Data type: `Optional[Ssh::Yes_no]`
 
 
 
-Default value: 'yes'
+Default value: `undef`
 
 ##### `xauth_location`
 
@@ -1071,7 +1750,7 @@ Data type: `Optional[String[1]]`
 
 
 
-Default value: '/usr/bin/xauth'
+Default value: `undef`
 
 ##### `custom`
 
