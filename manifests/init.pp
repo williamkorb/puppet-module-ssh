@@ -243,7 +243,7 @@ class ssh (
   Enum['present', 'absent'] $ssh_key_ensure = 'present',
   Boolean $ssh_key_import = false,
   Ssh::Key::Type $ssh_key_type = 'ssh-rsa',
-  Hash $keys = undef,
+  Hash $keys = {},
   Hash $config_entries = {},
   # class parameters below this line directly correlate with ssh_config parameters
   String[1] $host = '*',
@@ -687,7 +687,7 @@ class ssh (
   }
 
   # manage users' ssh authorized keys if present
-  if $keys != undef {
+  if $keys.empty == false {
     $keys.each |$key,$value| {
       ssh_authorized_key { $key:
         * => $value,
