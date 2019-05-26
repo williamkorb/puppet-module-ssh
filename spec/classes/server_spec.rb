@@ -1156,9 +1156,9 @@ describe 'ssh::server' do
         :invalid => [2770, '0844', '00644', 'string', %w(array), { 'ha' => 'sh' }, 3, 2.42, false, nil],
         :message => 'expects a match for Stdlib::Filemode|Error while evaluating a Resource Statement',
       },
-      'Stdlib::Port' => {
+      'Stdlib::Port (optional)' => {
         :name    => %w(port),
-        :valid   => [0, 65535],
+        :valid   => [0, 65535, :undef],
         :invalid => ['string', %w(array), { 'ha' => 'sh' }, -1, 2.42, 65536, false],
         :message => 'expects a match for Stdlib::Port|Error while evaluating a Resource Statement',
       },

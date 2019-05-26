@@ -235,124 +235,93 @@ class ssh::server (
   Boolean $service_hasrestart = true,
   Boolean $service_hasstatus = true,
   # all paramters below this line are for sshd_config
-  Optional[Array[String[1]]] $accept_env = [
-    'LANG',
-    'LC_CTYPE',
-    'LC_NUMERIC',
-    'LC_TIME',
-    'LC_COLLATE',
-    'LC_MONETARY',
-    'LC_MESSAGES',
-    'LC_PAPER',
-    'LC_NAME',
-    'LC_ADDRESS',
-    'LC_TELEPHONE',
-    'LC_MEASUREMENT',
-    'LC_IDENTIFICATION',
-    'LC_ALL',
-    'LANGUAGE',
-    'XMODIFIERS',
-  ],
-  Optional[Enum['any', 'inet', 'inet6']] $address_family = 'any',
-  Optional[Ssh::Yes_no] $allow_agent_forwarding = 'yes',
+  Optional[Array[String[1]]] $accept_env = undef,
+  Optional[Enum['any', 'inet', 'inet6']] $address_family = undef,
+  Optional[Ssh::Yes_no] $allow_agent_forwarding = undef,
   Variant[Undef, String[1], Array[String[1]]] $allow_groups = undef,
-  Optional[Enum['yes', 'all', 'no', 'local', 'remote']] $allow_stream_local_forwarding = 'yes',
-  Optional[Enum['yes', 'no', 'local', 'remote']] $allow_tcp_forwarding = 'yes',
+  Optional[Enum['yes', 'all', 'no', 'local', 'remote']] $allow_stream_local_forwarding = undef,
+  Optional[Enum['yes', 'no', 'local', 'remote']] $allow_tcp_forwarding = undef,
   Variant[Undef, String[1], Array[String[1]]] $allow_users = undef,
   Optional[Array[String[1]]] $authentication_methods = undef,
   Optional[String[1]] $authorized_keys_command = undef,
   Optional[String[1]] $authorized_keys_command_user = undef,
-  Variant[Undef, String[1], Array[String[1]]] $authorized_keys_file = [
-    '.ssh/authorized_keys',
-    '.ssh/authorized_keys2',
-  ],
+  Variant[Undef, String[1], Array[String[1]]] $authorized_keys_file = undef,
   Optional[String[1]] $authorized_principals_command = undef,
   Optional[String[1]] $authorized_principals_command_user = undef,
-  Optional[String[1]] $authorized_principals_file = 'none',
-  Optional[String[1]] $banner = 'none', # if set, this should be the same value of `$banner_path` which is `/etc/sshd_banner`.
-  Optional[Array[String[1]]] $ca_signature_algorithms = ['ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 'ecdsa-sha2-nistp521', 'ssh-ed25519', 'rsa-sha2-512', 'rsa-sha2-256', 'ssh-rsa'],
-  Optional[String[1]] $challenge_response_authentication = 'yes',
-  Optional[String[1]] $chroot_directory = 'none',
-  Optional[Array[String[1]]] $ciphers = [
-    'chacha20-poly1305@openssh.com',
-    'aes128-ctr',
-    'aes192-ctr',
-    'aes256-ctr',
-    'aes128-gcm@openssh.com',
-    'aes256-gcm@openssh.com',
-  ],
-  Optional[Integer[0]] $client_alive_count_max = 3, # docs read default as 0, though every os uses 3
-  Optional[Integer[0]] $client_alive_interval = 0,
-  Optional[Enum['yes', 'delayed', 'no']] $compression = 'yes',
+  Optional[String[1]] $authorized_principals_file = undef,
+  Optional[String[1]] $banner = undef,
+  Optional[Array[String[1]]] $ca_signature_algorithms = undef,
+  Optional[String[1]] $challenge_response_authentication = undef,
+  Optional[String[1]] $chroot_directory = undef,
+  Optional[Array[String[1]]] $ciphers = undef,
+  Optional[Integer[0]] $client_alive_count_max = undef,
+  Optional[Integer[0]] $client_alive_interval = undef,
+  Optional[Enum['yes', 'delayed', 'no']] $compression = undef,
   Variant[Undef, String[1], Array[String[1]]] $deny_groups = undef,
   Variant[Undef, String[1], Array[String[1]]] $deny_users = undef,
   Optional[Ssh::Yes_no] $disable_forwarding = undef,
-  Optional[Ssh::Yes_no] $expose_auth_info = undef, # docs read default is 'no', though no os specifies this
-  Optional[Enum['md5', 'sha256']] $fingerprint_hash = undef, # docs read default is 'sha256', though no os specifies this
-  Optional[String[1]] $force_command = undef, # docs read default is 'none', though no os specifies this
-  Optional[Enum['no', 'yes', 'clientspecified']] $gateway_ports = undef, # docs read default is 'no', though no os specifies this
-  Optional[Ssh::Yes_no] $gss_api_authentication = 'no',
-  Optional[Ssh::Yes_no] $gss_api_cleanup_credentials = 'yes',
-  Optional[Ssh::Yes_no] $gss_api_strict_acceptor_check = undef, # docs read default is 'yes', though no os specifies this
-  Optional[Array[String[1]]] $hostbased_accepted_key_types = undef, # docs give a default list, though no os specifies this
-  Optional[Ssh::Yes_no] $hostbased_authentication = 'no',
-  Optional[Ssh::Yes_no] $hostbased_uses_name_from_packet_only = undef, # docs read default is 'no', though no os specifies this
+  Optional[Ssh::Yes_no] $expose_auth_info = undef,
+  Optional[Enum['md5', 'sha256']] $fingerprint_hash = undef,
+  Optional[String[1]] $force_command = undef,
+  Optional[Enum['no', 'yes', 'clientspecified']] $gateway_ports = undef,
+  Optional[Ssh::Yes_no] $gss_api_authentication = undef,
+  Optional[Ssh::Yes_no] $gss_api_cleanup_credentials = undef,
+  Optional[Ssh::Yes_no] $gss_api_strict_acceptor_check = undef,
+  Optional[Array[String[1]]] $hostbased_accepted_key_types = undef,
+  Optional[Ssh::Yes_no] $hostbased_authentication = undef,
+  Optional[Ssh::Yes_no] $hostbased_uses_name_from_packet_only = undef,
   Optional[String[1]] $host_certificate = undef,
-  Optional[Array[String[1]]] $host_key = [
-    '/etc/ssh/ssh_host_ecdsa_key',
-    '/etc/ssh/ssh_host_ed25519_key',
-    '/etc/ssh/ssh_host_rsa_key',
-  ],
+  Optional[Array[String[1]]] $host_key = undef,
   Optional[String[1]] $host_key_agent = undef,
-  Optional[Array[String[1]]] $host_key_algorithms = undef, # docs give a default list, though no os specifies this
-  Optional[Ssh::Yes_no] $ignore_rhosts = 'yes',
-  Optional[Ssh::Yes_no] $ignore_user_known_hosts = 'no',
-  Optional[String[1]] $ip_qos = undef, # docs read default is 'af21 cs1', though no os specifies this
-  Optional[Ssh::Yes_no] $kbd_interactive_authentication = undef, # docs read default is the value of ChallengeResponseAuthentication ('yes'), though no os specifies this
-  Optional[Ssh::Yes_no] $kerberos_authentication = undef, # docs read default is 'no', though no os specifies this
-  Optional[Ssh::Yes_no] $kerberos_get_afs_token = undef, # docs read default is 'no', though no os specifies this
-  Optional[Ssh::Yes_no] $kerberos_or_local_passwd = undef, # docs read default is 'yes', though no os specifies this
-  Optional[Ssh::Yes_no] $kerberos_ticket_cleanup = undef, # docs read default is 'yes', though no os specifies
-  Optional[Array[String[1]]] $kex_algorithms = undef, # docs give a default list, though no os specifies this
+  Optional[Array[String[1]]] $host_key_algorithms = undef,
+  Optional[Ssh::Yes_no] $ignore_rhosts = undef,
+  Optional[Ssh::Yes_no] $ignore_user_known_hosts = undef,
+  Optional[String[1]] $ip_qos = undef,
+  Optional[Ssh::Yes_no] $kbd_interactive_authentication = undef,
+  Optional[Ssh::Yes_no] $kerberos_authentication = undef,
+  Optional[Ssh::Yes_no] $kerberos_get_afs_token = undef,
+  Optional[Ssh::Yes_no] $kerberos_or_local_passwd = undef,
+  Optional[Ssh::Yes_no] $kerberos_ticket_cleanup = undef,
+  Optional[Array[String[1]]] $kex_algorithms = undef,
   Optional[Array[String[1]]] $listen_address = undef,
-  Optional[Integer[0]] $login_grace_time = 120,
-  Optional[Ssh::Log_level] $log_level = 'INFO',
-  Optional[Array[String[1]]] $macs = undef, # docs give a default list, though no os specifies this
-  Optional[Integer[2]] $max_auth_tries = 6,
-  Optional[Integer[0]] $max_sessions = 10,
-  Optional[String[1]] $max_startups = '10:30:100',
-  Optional[Ssh::Yes_no] $password_authentication = 'yes',
-  Optional[Ssh::Yes_no] $permit_empty_passwords = 'no',
+  Optional[Integer[0]] $login_grace_time = undef,
+  Optional[Ssh::Log_level] $log_level = undef,
+  Optional[Array[String[1]]] $macs = undef,
+  Optional[Integer[2]] $max_auth_tries = undef,
+  Optional[Integer[0]] $max_sessions = undef,
+  Optional[String[1]] $max_startups = undef,
+  Optional[Ssh::Yes_no] $password_authentication = undef,
+  Optional[Ssh::Yes_no] $permit_empty_passwords = undef,
   Variant[Undef, String[1], Array[String[1]]] $permit_listen = undef,
-  Optional[Ssh::Permit_root_login] $permit_root_login = 'yes', # docs read default is 'prohibit-password', though every os uses 'yes'
-  Optional[Ssh::Yes_no] $permit_tty = undef, # docs read default is 'yes', though no os specifies
-  Optional[Enum['yes', 'point-to-point', 'ethernet', 'no']] $permit_tunnel = 'no',
-  Optional[String[1]] $permit_user_environment = 'no',
-  Optional[Ssh::Yes_no] $permit_user_rc = undef, # docs read default as 'yes', though no os specifies
-  Optional[String[1]] $pid_file = undef, # docs read default as '/var/run/sshd.pid', though no os specifies
-  Stdlib::Port $port = 22,
-  Optional[Ssh::Yes_no] $print_last_log = undef, # docs read default as 'yes'
-  Optional[Ssh::Yes_no] $print_motd = 'yes',
-  Optional[Array[String[1]]] $pubkey_accepted_key_types = undef, # docs give a default list, though no os specifies this
-  Optional[Ssh::Yes_no] $pubkey_authentication = 'yes',
-  Optional[String[1]] $rekey_limit = undef, # docs read default as 'default none', though no os specifies this
+  Optional[Ssh::Permit_root_login] $permit_root_login = undef,
+  Optional[Ssh::Yes_no] $permit_tty = undef,
+  Optional[Enum['yes', 'point-to-point', 'ethernet', 'no']] $permit_tunnel = undef,
+  Optional[String[1]] $permit_user_environment = undef,
+  Optional[Ssh::Yes_no] $permit_user_rc = undef,
+  Optional[String[1]] $pid_file = undef,
+  Optional[Stdlib::Port] $port = undef, #TODO, this can be specified multiple times
+  Optional[Ssh::Yes_no] $print_last_log = undef,
+  Optional[Ssh::Yes_no] $print_motd = undef,
+  Optional[Array[String[1]]] $pubkey_accepted_key_types = undef,
+  Optional[Ssh::Yes_no] $pubkey_authentication = undef,
+  Optional[String[1]] $rekey_limit = undef,
   Optional[String[1]] $revoked_keys = undef,
   Optional[String[1]] $rdomain = undef,
   Optional[String[1]] $set_env = undef,
-  Optional[Pattern[/^[0-7]{4}$/]] $stream_local_bind_mask = undef, # docs read default as '0177', though no os specifies
-  Optional[Ssh::Yes_no] $stream_local_bind_unlink = undef, # docs read default as 'no'
-  Optional[Ssh::Yes_no] $strict_modes = 'yes',
+  Optional[Pattern[/^[0-7]{4}$/]] $stream_local_bind_mask = undef,
+  Optional[Ssh::Yes_no] $stream_local_bind_unlink = undef,
+  Optional[Ssh::Yes_no] $strict_modes = undef,
   Optional[String[1]] $subsystem = undef,
-  Optional[Ssh::Syslog_facility] $syslog_facility = 'AUTH',
-  Optional[Ssh::Yes_no] $tcp_keep_alive = 'yes',
+  Optional[Ssh::Syslog_facility] $syslog_facility = undef,
+  Optional[Ssh::Yes_no] $tcp_keep_alive = undef,
   Optional[String[1]] $trusted_user_ca_keys = undef,
-  Optional[Ssh::Yes_no] $use_dns = 'no', # set to undef on solaris,  every platform besides el7 sets this to 'yes'
-  Optional[Ssh::Yes_no] $use_pam = 'yes', # not documented though all platforms set this to 'yes', except solaris which does not use it
-  Optional[String[1]] $version_addendum = undef, # default is 'none'
-  Optional[Integer[0]] $x11_display_offset = 10,
-  Optional[Ssh::Yes_no] $x11_forwarding = 'no', # most os's specify as 'yes', though this is generally not needed so siding with docs instead of platform
-  Optional[Ssh::Yes_no] $x11_use_localhost = 'yes',
-  Optional[String[1]] $xauth_location = '/usr/bin/xauth', # docs read default as '/usr/X11R6/bin/xauth', though almost every os uses '/usr/bin/xauth'
+  Optional[Ssh::Yes_no] $use_dns = undef,
+  Optional[Ssh::Yes_no] $use_pam = undef,
+  Optional[String[1]] $version_addendum = undef,
+  Optional[Integer[0]] $x11_display_offset = undef,
+  Optional[Ssh::Yes_no] $x11_forwarding = undef,
+  Optional[Ssh::Yes_no] $x11_use_localhost = undef,
+  Optional[String[1]] $xauth_location = undef,
   # custom is a string that allows for multiple lines to be appended to end of
   # the sshd_config file.
   Optional[String[1]] $custom = undef,
