@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     c.vm.box = "centos/7"
     c.vm.hostname = 'el7-ssh.example.com'
     c.vm.provision :shell, :path => "tests/provision.sh", :args => "el"
-#    c.vm.provision :shell, :inline => "puppet apply /vagrant/tests/init.pp"
+    c.vm.provision :shell, :inline => "puppet apply /vagrant/tests/init.pp"
   end
 
   config.vm.define "el6-ssh", autostart: false do |c|
