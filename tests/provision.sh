@@ -69,8 +69,8 @@ esac
 # ensure puppet is in the path by symlinking to /usr/bin
 ln -s /opt/puppetlabs/puppet/bin/puppet /usr/bin/puppet
 
-# use local timezone module
-puppet resource file /etc/puppetlabs/code/environments/production/modules/timezone ensure=link target=/vagrant
+# use local ssh module
+puppet resource file /etc/puppetlabs/code/environments/production/modules/ssh ensure=link target=/vagrant
 
 # setup module dependencies
 puppet module install puppetlabs/stdlib --version 5.2.0
